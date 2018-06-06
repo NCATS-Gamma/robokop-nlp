@@ -1,0 +1,47 @@
+what
+which
+gene
+genes, gene
+affect, affects
+affects
+is
+are
+associated
+with
+?
+[
+]
+disease
+diseases, disease
+biological
+process
+processes, process
+anatomical
+structure
+structures, structure
+interact, interacts
+interacts
+express, expresses
+expresses
+expressed
+to
+related
+cause, causes
+causes
+treat, treats
+treats
+prevent, prevents
+prevents
+produce, produces
+produces
+do
+does
+affected
+processed
+caused
+treated
+prevented
+produced
+regulated
+by
+in

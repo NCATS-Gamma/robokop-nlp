@@ -1,0 +1,62 @@
+// context-free grammar for biomedical question parsing, in EBNF-ish form
+// https://github.com/erezsh/lark/wiki/Grammar-Reference
+//
+// assume that text has been stripped of punctuation and converted to lowercase
+
+sentence: nom vp -> declaration
+    | WHAT nom vp Q -> q_what_0
+    | WHAT nom DO nom VB Q -> q_what_1
+    | WHAT nom BE obj Q -> q_what_2
+    | WHAT nom BE nom JJIN Q -> q_what_3
+
+nom: NOUN
+    | "[" NOUN "]"
+    | nom CC nom -> conjunction
+// verb phrase
+vp: VB nom
+    | vp pp
+obj: JJIN nom // adjective complement
+    | VBD "by" nom // passive
+// prepositional phrase 
+pp: IN nom 
+
+Q: "?"
+WHAT: "what" | "which"
+NOUN: /genes?/
+    | /diseases?/
+    | /drugs?/
+    | /biological process(es)?/
+    | /anatomical structures?/
+    | /phenotypic features?/
+    | /phenotypes?/
+    | /chemical substances?/
+    | /ENTITY[0-9]+/
+VB: /affects?/
+    | /interacts? with/
+    | /regulates?/
+    | /causes?/
+    | /treats?/
+    | /prevents?/
+    | /express(es?)/
+    | /produces?/
+VBD: "affected"
+    | "regulated"
+    | "caused"
+    | "treated"
+    | "prevented"
+    | "expressed"
+    | "produced"
+JJ: "associated"  // with
+    | "related"   // to
+    | "expressed" // in
+JJIN: "associated with"
+    | "related to"
+    | "expressed in"
+CC: "and" | "or"
+IN: "by" | "to" | "with" | "in" | "of"
+DO: /do(es)?/
+BE: /(is|are)/
+
+%ignore "[" "]"
+%import common.WS
+%ignore WS

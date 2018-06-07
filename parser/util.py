@@ -118,61 +118,44 @@ def parse_tree(tree):
         })
     elif tree.data == 'q_what_2':
         obj = tree.children[-2]
-        if obj.children[0].type == 'VBD':
-            nom = obj.children[1]
-            thing0 = nom.children[0] # assume a single noun
-            graph['nodes'].append({
-                'id': 0,
-                'name': thing0.value
-            })
+        pp = obj.children[1]
 
-            verb = obj.children[0]
-            graph['edges'].append({
-                'source_id': 1,
-                'target_id': 0,
-                'predicate': f"is {verb.value} by"
-            })
-
-            nom = tree.children[1]
-            thing1 = nom.children[0] # assume a single noun
-            graph['nodes'].append({
-                'id': 1,
-                'name': thing1.value
-            })
-        if obj.children[0].type == 'JJIN':
-            nom = tree.children[1]
-            thing0 = nom.children[0] # assume a single noun
-            graph['nodes'].append({
-                'id': 0,
-                'name': thing0.value
-            })
-
-            adjective = obj.children[0]
-            graph['edges'].append({
-                'source_id': 0,
-                'target_id': 1,
-                'predicate': f"is {adjective.value}"
-            })
-
-            nom = obj.children[1]
-            thing1 = nom.children[0] # assume a single noun
-            graph['nodes'].append({
-                'id': 1,
-                'name': thing1.value
-            })
-    elif tree.data == 'q_what_3':
-        nom = tree.children[-3]
+        nom = tree.children[1]
         thing0 = nom.children[0] # assume a single noun
         graph['nodes'].append({
             'id': 0,
             'name': thing0.value
         })
 
-        adjective = tree.children[-2]
+        verb = obj.children[0]
+        preposition = pp.children[0]
         graph['edges'].append({
             'source_id': 0,
             'target_id': 1,
-            'predicate': f"is {adjective.value}"
+            'predicate': f"is {verb.value} {preposition.value}"
+        })
+
+        nom = pp.children[1]
+        thing1 = nom.children[0] # assume a single noun
+        graph['nodes'].append({
+            'id': 1,
+            'name': thing1.value
+        })
+    elif tree.data == 'q_what_3':
+        print(tree)
+        nom = tree.children[-4]
+        thing0 = nom.children[0] # assume a single noun
+        graph['nodes'].append({
+            'id': 0,
+            'name': thing0.value
+        })
+
+        adjective = tree.children[-3]
+        preposition = tree.children[-2]
+        graph['edges'].append({
+            'source_id': 0,
+            'target_id': 1,
+            'predicate': f"is {adjective.value} {preposition.value}"
         })
 
         nom = tree.children[1]
@@ -205,27 +188,21 @@ def post_proc_graph(graph, term_map):
 
 if __name__=='__main__':
     try:
-        parse_text("What genes affect [Ebola]?")
+        parse_text("What genes affect Ebola?")
     except Exception as err:
         print(f'Failed to parse: {err}')
 
     try:
-        parse_text("What gene is associated with [Ebola virus disease]?")
+        parse_text("What cells are affected by Ebola?")
     except Exception as err:
         print(f'Failed to parse: {err}')
 
     try:
-        parse_text("What gene is associated with [a thing with type X]?")
-    except Exception as err:
-        print(f'Failed to parse: {err}')
-
-    # should error
-    try:
-        parse_text("What gene is associated with a thing with type X?")
+        parse_text("What genes is Ebola affected by?")
     except Exception as err:
         print(f'Failed to parse: {err}')
 
     try:
-        parse_text("What anatomical structure interacts with imatinib?")
+        parse_text("What cells does Ebola affect?")
     except Exception as err:
         print(f'Failed to parse: {err}')

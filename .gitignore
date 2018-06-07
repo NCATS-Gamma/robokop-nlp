@@ -1,1 +1,2 @@
 *.pyc
+test/.pytest_cache

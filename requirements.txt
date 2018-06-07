@@ -1,0 +1,6 @@
+flasgger
+flask
+flask-cors
+flask-restful
+nltk
+lark-parser

@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     # Get host and port from environmental variables
     server_host = '0.0.0.0'
-    server_port = 5000
+    server_port = 9475
 
     app.run(host=server_host,\
         port=server_port,\

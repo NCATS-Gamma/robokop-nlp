@@ -66,6 +66,18 @@ def parse_text(text):
     graph = post_proc_graph(graph, term_map)
     return graph
 
+def parse_noun(noun, id, graph):
+    NOUN = noun.children[0] # assume a single noun
+    graph['nodes'].append({
+        'id': id,
+        'name': NOUN.value
+    })
+    return graph
+
+def parse_nom(nom, id, graph):
+    if nom.data == "noun":
+        return parse_noun(nom, id, graph)
+    
 
 def parse_tree(tree):
     # produce graph with nodes and edges
@@ -74,34 +86,40 @@ def parse_tree(tree):
         'edges': []
     }
     if tree.data == 'q_what_0':
-        nom = tree.children[-3]
-        thing0 = nom.children[0] # assume a single noun
-        graph['nodes'].append({
-            'id': 0,
-            'name': thing0.value
-        })
+        if tree.children[2].data == "passive":
+            nom = tree.children[-3]
+            graph = parse_nom(nom, 0, graph)
 
-        vp = tree.children[-2]
-        verb = vp.children[0]
-        graph['edges'].append({
-            'source_id': 0,
-            'target_id': 1,
-            'predicate': verb.value
-        })
+            obj = tree.children[2].children[1]
+            pp = obj.children[1]
 
-        nom = vp.children[1]
-        thing1 = nom.children[0] # assume a single noun
-        graph['nodes'].append({
-            'id': 1,
-            'name': thing1.value
-        })
+            preposition = pp.children[0]
+            verb = obj.children[0]
+            graph['edges'].append({
+                'source_id': 0,
+                'target_id': 1,
+                'predicate': f"is {verb.value} {preposition.value}"
+            })
+
+            nom = pp.children[1]
+            graph = parse_nom(nom, 1, graph)
+        else:
+            nom = tree.children[-3]
+            graph = parse_nom(nom, 0, graph)
+
+            vp = tree.children[-2]
+            verb = vp.children[0]
+            graph['edges'].append({
+                'source_id': 0,
+                'target_id': 1,
+                'predicate': verb.value
+            })
+
+            nom = vp.children[1]
+            graph = parse_nom(nom, 1, graph)
     elif tree.data == 'q_what_1':
         nom = tree.children[-3]
-        thing0 = nom.children[0] # assume a single noun
-        graph['nodes'].append({
-            'id': 0,
-            'name': thing0.value
-        })
+        graph = parse_nom(nom, 0, graph)
 
         verb = tree.children[-2]
         graph['edges'].append({
@@ -111,21 +129,13 @@ def parse_tree(tree):
         })
 
         nom = tree.children[1]
-        thing1 = nom.children[0] # assume a single noun
-        graph['nodes'].append({
-            'id': 1,
-            'name': thing1.value
-        })
+        graph = parse_nom(nom, 1, graph)
     elif tree.data == 'q_what_2':
         obj = tree.children[-2]
         pp = obj.children[1]
 
         nom = tree.children[1]
-        thing0 = nom.children[0] # assume a single noun
-        graph['nodes'].append({
-            'id': 0,
-            'name': thing0.value
-        })
+        graph = parse_nom(nom, 0, graph)
 
         verb = obj.children[0]
         preposition = pp.children[0]
@@ -136,19 +146,10 @@ def parse_tree(tree):
         })
 
         nom = pp.children[1]
-        thing1 = nom.children[0] # assume a single noun
-        graph['nodes'].append({
-            'id': 1,
-            'name': thing1.value
-        })
+        graph = parse_nom(nom, 1, graph)
     elif tree.data == 'q_what_3':
-        print(tree)
         nom = tree.children[-4]
-        thing0 = nom.children[0] # assume a single noun
-        graph['nodes'].append({
-            'id': 0,
-            'name': thing0.value
-        })
+        graph = parse_nom(nom, 0, graph)
 
         adjective = tree.children[-3]
         preposition = tree.children[-2]
@@ -159,11 +160,7 @@ def parse_tree(tree):
         })
 
         nom = tree.children[1]
-        thing1 = nom.children[0] # assume a single noun
-        graph['nodes'].append({
-            'id': 1,
-            'name': thing1.value
-        })
+        graph = parse_nom(nom, 1, graph)
 
     return graph
 

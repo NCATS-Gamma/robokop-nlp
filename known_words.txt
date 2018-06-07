@@ -11,6 +11,14 @@ with
 ?
 [
 ]
+cell
+cells, cell
+drug, chemical_substance
+drugs, chemical_substance
+chemical_substance
+chemical
+substance
+substances
 disease
 diseases, disease
 biological

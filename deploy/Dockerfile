@@ -28,8 +28,7 @@ RUN pip install -r ./requirements.txt --src /usr/local/src
 ENV HOME=/home/murphy
 ENV USER=murphy
 ENV PYTHONPATH=/home/murphy/robokop-nlp
-ENV ROBOKOP_HOME=/home/murphy
 
-WORKDIR /home/murphy
+WORKDIR /home/murphy/robokop-nlp
 
-CMD ["./robokop-nlp/parser/api/server.py"]
+CMD ["./parser/api/server.py"]

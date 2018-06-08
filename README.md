@@ -1,7 +1,7 @@
 ## To deploy from DockerHub:
 
 ```
-docker run -p 9475:9475 robokop-nlp
+docker run -p 9475:9475 patrickkwang/robokop-nlp
 ```
 
 ## To run from source:

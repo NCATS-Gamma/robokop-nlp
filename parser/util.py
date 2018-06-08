@@ -28,7 +28,8 @@ def find_brackets(words):
     return words
 
 def parse_text(text):
-    with open(os.path.join(os.environ['ROBOKOP_HOME'],'robokop-nlp','known_words.txt')) as file:
+    file_dir = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(file_dir, '..', 'known_words.txt')) as file:
         lines = file.read().split('\n')
         words = [l for l in lines if ',' not in l]
         word_map = {l.split(', ')[0]:l.split(', ')[-1] for l in lines if ',' in l}
@@ -55,7 +56,7 @@ def parse_text(text):
     substituted_terms = [w if w in words else f'ENTITY{i}' for i, w in enumerate(collapsed_terms)]
     text = ' '.join(substituted_terms)
 
-    with open(os.path.join(os.environ['ROBOKOP_HOME'],'robokop-nlp','grammar.txt')) as file:
+    with open(os.path.join(file_dir, '..', 'grammar.txt')) as file:
         grammar = file.read()
 
     parser = Lark(grammar, start='sentence', ambiguity='explicit')  # Explicit ambiguity in parse tree!

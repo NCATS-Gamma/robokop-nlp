@@ -16,14 +16,15 @@ class NLP(Resource):
         ---
         tags: [parse]
         summary: "Convert a natural-language question into machine-readable form."
-        parameters:
-          - in: "body"
+        requestBody:
             name: "question"
             description: "Natural-language question"
             required: true
-            schema:
-                type: string
-                example: "What genes affect Ebola?"
+            content:
+                text/plain:
+                    schema:
+                        type: string
+                        example: "What genes affect Ebola?"
         responses:
             200:
                 description: "Here's your graph"
@@ -32,11 +33,10 @@ class NLP(Resource):
             400:
                 description: "Something went wrong"
         """
-        graph = parse_text(request.json)
-        # try:
-        #     graph = parse_text(request.json)
-        # except Exception as err:
-        #     return f"Failed to parse question. {err}", 500
+        string = request.get_data().decode() # convert bytes to normal str
+        if string[0] == string[-1] == "\"":
+            string = string[1:-1]
+        graph = parse_text(string)
         
         return graph, 200
 

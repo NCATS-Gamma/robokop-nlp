@@ -21,6 +21,9 @@ substance
 substances
 disease
 diseases, disease
+genetic
+condition
+conditions, condition
 biological
 process
 processes, process
@@ -53,3 +56,10 @@ produced
 regulated
 by
 in
+the
+cop
+for
+and
+protect, protects
+protects
+against

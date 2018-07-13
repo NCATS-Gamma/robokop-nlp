@@ -7,6 +7,8 @@ sentence: nom vp -> declaration
     | WHAT nom vp Q -> q_what_0 // What genes affect Ebola?, What cells are affected by Ebola?
     | WHAT nom DO nom VB Q -> q_what_1 // What cells does Ebola affect?
     | WHAT nom BE nom VBD IN Q -> q_what_3 // What genes is Ebola affected by?
+    | "what is the cop for" nom Q -> q_cop
+    | "what genetic condition protects against" nom Q -> q_gc
 
 nom: NOUN -> noun
     | "[" NOUN "]"
@@ -30,6 +32,7 @@ NOUN: /genes?/
     | /phenotypic( |_)features?/
     | /phenotypes?/
     | /chemical( |_)substances?/
+    | /genetic( |_)conditions?/
     | /cells?/
     | /ENTITY[0-9]+/
 VB: /affects?/

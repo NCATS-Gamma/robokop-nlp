@@ -87,7 +87,76 @@ def parse_tree(tree):
         'nodes': [],
         'edges': []
     }
-    if tree.data == 'q_what_0':
+    if tree.data == 'q_gc':
+        nom = tree.children[0]
+        graph = parse_nom(nom, 0, graph)
+        graph['edges'].append({
+            'source_id': 0,
+            'target_id': 1
+        })
+        graph['nodes'].append({
+            'id': 1,
+            'name': 'gene'
+        })
+        graph['edges'].append({
+            'source_id': 1,
+            'target_id': 2
+        })
+        graph['nodes'].append({
+            'id': 2,
+            'name': 'genetic_condition'
+        })
+    elif tree.data == 'q_cop':
+        nom = tree.children[0]
+        if nom.data != 'conjunction':
+            raise ValueError('Try a question of the form "What is the COP for [drug] and [disease]?".')
+        graph = parse_nom(nom.children[0], 0, graph)
+        graph['edges'].append({
+            'source_id': 0,
+            'target_id': 1
+        })
+        graph['nodes'].append({
+            'id': 1,
+            'name': 'gene'
+        })
+        graph['edges'].append({
+            'source_id': 1,
+            'target_id': 2
+        })
+        graph['nodes'].append({
+            'id': 2,
+            'name': 'biological_process'
+        })
+        graph['edges'].append({
+            'source_id': 2,
+            'target_id': 3
+        })
+        graph['nodes'].append({
+            'id': 3,
+            'name': 'cell'
+        })
+        graph['edges'].append({
+            'source_id': 3,
+            'target_id': 4
+        })
+        graph['nodes'].append({
+            'id': 4,
+            'name': 'anatomical_entity'
+        })
+        graph['edges'].append({
+            'source_id': 4,
+            'target_id': 5
+        })
+        graph['nodes'].append({
+            'id': 5,
+            'name': 'phenotypic_feature'
+        })
+        graph['edges'].append({
+            'source_id': 5,
+            'target_id': 6
+        })
+        graph = parse_nom(nom.children[2], 6, graph)
+    elif tree.data == 'q_what_0':
         if tree.children[2].data == "passive":
             nom = tree.children[-3]
             graph = parse_nom(nom, 0, graph)
@@ -173,7 +242,6 @@ def post_proc_graph(graph, term_map):
             # bionames_query = f"http://127.0.0.1:5001/lookup/{n['name']}/{{concept}}/"
             bionames_query = f"https://bionames.renci.org/lookup/{n['name']}/{{concept}}/"
             response = requests.get(bionames_query).json()
-            print(response)
             first = response[0]
             n['curie'] = first['id']
             n['name'] = first['label'] if 'label' in first else first['id']

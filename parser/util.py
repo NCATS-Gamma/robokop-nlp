@@ -90,6 +90,7 @@ def parse_tree(tree):
     if tree.data == 'q_gc':
         nom = tree.children[0]
         graph = parse_nom(nom, 0, graph)
+        graph['nodes'][0]['type'] = 'disease'
         graph['edges'].append({
             'source_id': 0,
             'target_id': 1
@@ -111,6 +112,7 @@ def parse_tree(tree):
         if nom.data != 'conjunction':
             raise ValueError('Try a question of the form "What is the COP for [drug] and [disease]?".')
         graph = parse_nom(nom.children[0], 0, graph)
+        graph['nodes'][0]['type'] = 'chemical_substance'
         graph['edges'].append({
             'source_id': 0,
             'target_id': 1
@@ -156,6 +158,7 @@ def parse_tree(tree):
             'target_id': 6
         })
         graph = parse_nom(nom.children[2], 6, graph)
+        graph['nodes'][-1]['type'] = 'disease'
     elif tree.data == 'q_what_0':
         if tree.children[2].data == "passive":
             nom = tree.children[-3]
@@ -245,8 +248,8 @@ def post_proc_graph(graph, term_map):
             first = response[0]
             n['curie'] = first['id']
             n['name'] = first['label'] if 'label' in first else first['id']
-            if 'type' in n:
-                n['type'] = first['type']
+            # if 'type' in n:
+            #     n['type'] = first['type']
         else:
             n['type'] = n['name']
             n.pop('name')
